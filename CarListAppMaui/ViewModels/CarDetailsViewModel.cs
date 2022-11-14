@@ -32,7 +32,8 @@ namespace CarListAppMaui.ViewModels
         {
             Id = Convert.ToInt32(HttpUtility.UrlDecode(query[nameof(Id)].ToString()));
         
-            //Car = App.CarService.GetCar(Id);
+            
+            // Car = App.CarDatabaseService.GetCar(Id);  // DD PLEASE COULD YOU CHECK MY MISTAKE 
         }
 
         public async Task GetCarData()
@@ -43,7 +44,7 @@ namespace CarListAppMaui.ViewModels
             }
             else
             {
-                car = App.CarService.GetCar(Id); //dovrebbe essere CarDatabaseService 
+                // car = App.CarDatabaseService.GetCar(Id); // DD PLEASE COULD YOU CHECK MY MISTAKE 
             }
         }
     }

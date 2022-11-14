@@ -72,7 +72,8 @@ namespace CarListAppMaui.ViewModels
                 }
                 else
                 {
-                    cars = App.CarService.GetCars(); //App.CarDatabaseService.GetCars(); 
+                    //cars = App.CarDatabaseService.GetCars(); // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                    
                 }
                 
 
@@ -157,9 +158,10 @@ namespace CarListAppMaui.ViewModels
                 }
                 else
                 {
-                    
-                    //App.CarService.Upd .UpdateCar(car);
-                    message = App.CarService.StatusMessage;
+
+                    //App.CarDatabaseService.UpdateCar(car); // DD PLEASE COULD YOU CHECK MY MISTAKE 
+
+                    //message = App.CarDatabaseService.StatusMessage;// DD PLEASE COULD YOU CHECK MY MISTAKE 
 
                 }
             }
@@ -172,9 +174,9 @@ namespace CarListAppMaui.ViewModels
                 }
                 else
                 {
-                    
-                    //App.CarDatabaseService.AddCar(car);
-                    //message = App.CarDatabaseService.StatusMessage;
+
+                    //App.CarDatabaseService.AddCar(car); // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                    //message = App.CarDatabaseService.StatusMessage; // DD PLEASE COULD YOU CHECK MY MISTAKE 
                 }
             }
 
@@ -201,8 +203,8 @@ namespace CarListAppMaui.ViewModels
             }
             else
             {
-                //App.CarDatabaseService.DeleteCar(id);
-                //message = App.CarDatabaseService.StatusMessage; 
+                //App.CarDatabaseService.DeleteCar(id);  // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                //message = App.CarDatabaseService.StatusMessage;  // DD PLEASE COULD YOU CHECK MY MISTAKE 
 
             }
             await ShowAlert("Record Removed Successfully");
