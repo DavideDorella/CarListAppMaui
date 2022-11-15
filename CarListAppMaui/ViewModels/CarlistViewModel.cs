@@ -13,32 +13,25 @@ using System.Threading.Tasks;
 using System.Text.Json;
 
 using System.ComponentModel;
-
+using Newtonsoft.Json;
 
 namespace CarListAppMaui.ViewModels
 {
     public partial class CarlistViewModel : BaseViewModel
     {
+        const string editButtonText = "Update Car";
+        const string createButtonText = "Add Car";
+        
         //private readonly CarDatabaseService carDataBaseService;
         private readonly CarApiServices carApiService;
         NetworkAccess accessType =Connectivity.Current.NetworkAccess;
         string message =string.Empty;
-
-
-        const string editButtonText = "Update Car";
-        const string createButtonText = "Add Car";
-
+       
         public ObservableCollection<Car> Cars { get; private set; } = new();
-
-
-        //public ObservableCollection<Car> Cars { get; private set; }
-
-        //public CarlistViewModel(CarDatabaseService carService)
         public CarlistViewModel(CarApiServices carApiService)
         {
             Title = "Car List";
             AddEditButtonText =createButtonText;
-            //GetCarList().Wait();
             this.carApiService = carApiService;
         }
         [ObservableProperty]
@@ -56,7 +49,7 @@ namespace CarListAppMaui.ViewModels
 
 
         [RelayCommand]
-        async Task GetCarList()
+        public async Task GetCarList()
         {
             if (IsLoading) return;
             try
@@ -71,25 +64,13 @@ namespace CarListAppMaui.ViewModels
                     cars = await carApiService.GetCars();
                 }
                 else
-                {
-                    //cars = App.CarDatabaseService.GetCars(); // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                {                    
+                    cars = App.CarDatabaseService.GetCars(); // DD PLEASE COULD YOU CHECK MY MISTAKE 
                     
                 }
                 
-
                 foreach (var car in cars) Cars.Add(car);
-
-                //string filename = "carlist.json";
-                //var serializedList = JsonSerializer.Serialize(cars);
-                //File.WriteAllText(filename, serializedList);
-
-                //var rawText = File.ReadAllText(filename);
-                //var carsFromText = JsonSerializer.Deserialize<List<Car>>(rawText);
-
-                //string path = FileSystem.AppDataDirectory;
-
-                //string folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-
+                
             }
             catch (Exception ex)
             {
@@ -113,26 +94,26 @@ namespace CarListAppMaui.ViewModels
 
         }
 
-        [RelayCommand]
-        async Task AddCar()
-        {
-            if (string.IsNullOrEmpty(Make) || string.IsNullOrEmpty(Model) || string.IsNullOrEmpty(Vin))
-            {
-                await Shell.Current.DisplayAlert("Invalid Data", "Please insert valid data", "Ok");
-                return;
-            }
-            var car = new Car
-            {
-                Make = Make,
-                Model = Model,
-                Vin = Vin
-            };
+        //[RelayCommand]
+        //async Task AddCar()
+        //{
+        //    if (string.IsNullOrEmpty(Make) || string.IsNullOrEmpty(Model) || string.IsNullOrEmpty(Vin))
+        //    {
+        //        await Shell.Current.DisplayAlert("Invalid Data", "Please insert valid data", "Ok");
+        //        return;
+        //    }
+        //    var car = new Car
+        //    {
+        //        Make = Make,
+        //        Model = Model,
+        //        Vin = Vin
+        //    };
 
-            App.CarService.AddCar(car);
-            await Shell.Current.DisplayAlert("Info", App.CarService.StatusMessage, "Ok");
-            await GetCarList();
+        //    App  .CarService.AddCar(car);
+        //    await Shell.Current.DisplayAlert("Info", App.CarService.StatusMessage, "Ok");
+        //    await GetCarList();
 
-        }
+        //}
 
         [RelayCommand]
         async Task SaveCar()
@@ -144,6 +125,7 @@ namespace CarListAppMaui.ViewModels
             }
             var car = new Car
             {
+                Id =CarId, 
                 Make = Make,
                 Model = Model,
                 Vin = Vin
@@ -159,9 +141,9 @@ namespace CarListAppMaui.ViewModels
                 else
                 {
 
-                    //App.CarDatabaseService.UpdateCar(car); // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                    App.CarDatabaseService.UpdateCar(car); // DD PLEASE COULD YOU CHECK MY MISTAKE 
 
-                    //message = App.CarDatabaseService.StatusMessage;// DD PLEASE COULD YOU CHECK MY MISTAKE 
+                    message = App.CarDatabaseService.StatusMessage;// DD PLEASE COULD YOU CHECK MY MISTAKE 
 
                 }
             }
@@ -175,8 +157,8 @@ namespace CarListAppMaui.ViewModels
                 else
                 {
 
-                    //App.CarDatabaseService.AddCar(car); // DD PLEASE COULD YOU CHECK MY MISTAKE 
-                    //message = App.CarDatabaseService.StatusMessage; // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                    App.CarDatabaseService.AddCar(car); // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                    message = App.CarDatabaseService.StatusMessage; // DD PLEASE COULD YOU CHECK MY MISTAKE 
                 }
             }
 
@@ -203,8 +185,8 @@ namespace CarListAppMaui.ViewModels
             }
             else
             {
-                //App.CarDatabaseService.DeleteCar(id);  // DD PLEASE COULD YOU CHECK MY MISTAKE 
-                //message = App.CarDatabaseService.StatusMessage;  // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                App.CarDatabaseService.DeleteCar(id);  // DD PLEASE COULD YOU CHECK MY MISTAKE 
+                message = App.CarDatabaseService.StatusMessage;  // DD PLEASE COULD YOU CHECK MY MISTAKE 
 
             }
             await ShowAlert("Record Removed Successfully");
@@ -248,7 +230,16 @@ namespace CarListAppMaui.ViewModels
         {
             AddEditButtonText = editButtonText;
             CarId = id;
-            var car = App.CarService.GetCar(id);
+            Car car;
+            if (accessType == NetworkAccess.Internet)
+            {
+                car = await carApiService.GetCar(CarId);
+            }
+            else
+            {
+                car = App.CarDatabaseService.GetCar(CarId);
+            }
+
             Make = car.Make;
             Model = car.Model;
             Vin = car.Vin;

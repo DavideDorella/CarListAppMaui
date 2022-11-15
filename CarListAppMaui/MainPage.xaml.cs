@@ -4,19 +4,20 @@ namespace CarListAppMaui;
 
 public partial class MainPage : ContentPage
 {
-	
-	public MainPage(CarlistViewModel carlistViewModel)
+    private readonly CarlistViewModel carListViewModel;
+    public MainPage(CarlistViewModel carlistViewModel)
 	{
-	   //dd InitializeComponent();
+	    InitializeComponent();
 		BindingContext = carlistViewModel;
-		
-		// esempio di salvataggio
-		//Preferences.Set("saveDetails", true);
-		//var detailsSaved = Preferences.Get("saveDetails", false);
+        this.carListViewModel = carlistViewModel;
+        
+    }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await carListViewModel.GetCarList(); 
+    }
 
 
-	}
-
-	
 }
 

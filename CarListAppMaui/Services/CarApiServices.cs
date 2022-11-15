@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Net.Http.Json;
+using Newtonsoft.Json; // add
+using System.Net.Http.Json; // add
+using CarListAppMaui.ViewModels; // add
 
 namespace CarListAppMaui.Services
 {
