@@ -14,8 +14,11 @@ namespace CarListAppMaui.Services
         public class CarApiServices
     {
         HttpClient _httpClient;
-        public static string BaseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8099" : "http://localhost:8099";
+         //public static string BaseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8099" : "http://localhost:8099";
+
+        public static string BaseAddress = "http://10.0.2.2:44313";
         public string StatusMessage;
+    //    https://localhost:44313/swagger/v
         public CarApiServices()
         { 
             _httpClient=new()  {  BaseAddress= new Uri(BaseAddress)};
@@ -28,9 +31,9 @@ namespace CarListAppMaui.Services
                 return JsonConvert.DeserializeObject<List<Car>>(respone);
                 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                StatusMessage = "Failed to retrieve data.";
+                StatusMessage = $"Errore: {ex.Message}";
             }
 
             return null;
@@ -77,6 +80,7 @@ namespace CarListAppMaui.Services
             }
         }
         public async Task UpdateCar(int id, Car car)
+
         {
             try
             {
