@@ -13,13 +13,15 @@ namespace CarListAppMaui.Services
 {
         public class CarApiServices
     {
-        HttpClient _httpClient;
-         //public static string BaseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8099" : "http://localhost:8099";
-
-        public static string BaseAddress = "http://10.0.2.2:44313";
+        private readonly HttpClient _httpClient;
         public string StatusMessage;
-    //    https://localhost:44313/swagger/v
-        public CarApiServices()
+         //public static string BaseAddress = DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8099" : "http://localhost:8099";
+                
+        private static readonly string BaseAddress = DeviceInfo.Platform == DevicePlatform.Android 
+            ? "http://10.0.2.2:5041" 
+            : "http://localhost:5041";
+
+           public CarApiServices()
         { 
             _httpClient=new()  {  BaseAddress= new Uri(BaseAddress)};
         }
@@ -61,9 +63,9 @@ namespace CarListAppMaui.Services
                 respone.EnsureSuccessStatusCode();
                 StatusMessage = "Insert Successful";                
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                StatusMessage = "Failed to add data.";
+                StatusMessage = $"Errore: {ex.Message}";
             }
         }
         public async Task DeleteCar(int id)
@@ -84,13 +86,14 @@ namespace CarListAppMaui.Services
         {
             try
             {
-                var respone = await _httpClient.PostAsJsonAsync("/cars/" +id, car);
-                respone.EnsureSuccessStatusCode();
+                
+                var response = await _httpClient.PutAsJsonAsync("/cars/" + id, car);
+                response.EnsureSuccessStatusCode();
                 StatusMessage = "Update Successful";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                StatusMessage = "Failed to update data.";
+                StatusMessage = $"Errore: {ex.Message}";
             }
         }
 
